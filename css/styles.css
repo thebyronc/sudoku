@@ -1,0 +1,37 @@
+#container {
+	outline: 2px solid #000;
+	margin: auto;
+	height: 900px;
+	width: 900px;
+	padding: 0;
+	border: none;
+}
+
+.grid {
+	margin: 0px;
+	padding: 0px;
+  width: 100px;
+  height: 100px;
+	border: none;
+	outline: 1px dotted #000;
+	display: inline-block;
+}
+
+.grid:nth-child(3n+3) {
+  border-right: 2px solid #000000;
+}
+
+.botborder {
+  border-bottom: 2px solid #000000;
+}
+
+.newGrid {
+  margin: auto;
+}
+
+p {
+	margin: auto;
+	width: 100px;
+	text-align: center;
+	margin-top: 40px;
+}
