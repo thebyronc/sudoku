@@ -49,14 +49,6 @@ var Board = exports.Board = function () {
               index += 9;
             }
           }
-          // console.log("row "+ row +": " + rowNumbers);
-          // else if(index >= rowNumbers.length) {
-          //   console.log("Number cannot be added: " + rowNumbers[index]);
-          // }
-          // if (board[row-1].length < (col)) {
-          //   $("#" + row + "" + col-1).html(`<p class="error">${rowNumbers[0]}</p>`);
-          //   board[row-1].push(rowNumbers.splice(0, 1));
-          // }
         }
       }
 
@@ -76,37 +68,34 @@ var Board = exports.Board = function () {
 
 var isSafe = function isSafe(board, number, numberRow, numberCol) {
   var check = 0;
-  // for(let rows = 1; rows < board.length; rows++){
-  //   if(number == board[rows-1][numberCol-1]) {
-  //     check += 1;
-  //   } else {console.log("row check: "+ rows + "Row Number:");}
-  // }
-
   check += checkColumn(board, number, numberCol);
 
   // debugger;
-  if (numberRow - 1 < 3 && numberCol - 1 < 3) {
-    check += checkSection(board, number, 0, 3, 0, 3);
-  } else if (numberRow - 1 < 3 && numberCol - 1 < 6) {
-    check += checkSection(board, number, 0, 3, 3, 6);
-  } else if (numberRow - 1 < 3 && numberCol - 1 < 9) {
-    check += checkSection(board, number, 0, 3, 6, 9);
-  } else if (numberRow - 1 < 6 && numberCol - 1 < 3) {
-    check += checkSection(board, number, 3, 6, 0, 3);
-  } else if (numberRow - 1 < 6 && numberCol - 1 < 6) {
-    check += checkSection(board, number, 3, 6, 3, 6);
-  } else if (numberRow - 1 < 6 && numberCol - 1 < 9) {
-    check += checkSection(board, number, 3, 6, 6, 9);
-  } else if (numberRow - 1 < 9 && numberCol - 1 < 3) {
-    check += checkSection(board, number, 6, 9, 0, 3);
-  } else if (numberRow - 1 < 9 && numberCol - 1 < 6) {
-    check += checkSection(board, number, 6, 9, 3, 6);
-  } else if (numberRow - 1 < 9 && numberCol - 1 < 9) {
-    check += checkSection(board, number, 6, 9, 6, 9);
-  } else {
-    console.log("ERROR: Reached Elsed in Section IsSafe");
-  }
-  console.log("Row Number: " + numberRow + " Check Number: " + check + " Number RC:" + numberRow + "" + numberCol);
+  // if(numberRow-1 < 3 && numberCol-1 < 3) {
+  //   check += checkSection(board,number,0,3,0,3);
+  // } else if(numberRow-1 < 3 && numberCol-1 < 6) {
+  //   check += checkSection(board,number,0,3,3,6);
+  // } else if(numberRow-1 < 3 && numberCol-1 < 9) {
+  //   check += checkSection(board,number,0,3,6,9);
+  // } else if(numberRow-1 < 6 && numberCol-1 < 3) {
+  //   check += checkSection(board,number,3,6,0,3);
+  // } else if(numberRow-1 < 6 && numberCol-1 < 6) {
+  //   check += checkSection(board,number,3,6,3,6);
+  // } else if(numberRow-1 < 6 && numberCol-1 < 9) {
+  //   check += checkSection(board,number,3,6,6,9);
+  // } else if(numberRow-1 < 9 && numberCol-1 < 3) {
+  //   check += checkSection(board,number,6,9,0,3);
+  // } else if(numberRow-1 < 9 && numberCol-1 < 6) {
+  //   check += checkSection(board,number,6,9,3,6);
+  // } else if(numberRow-1 < 9 && numberCol-1 < 9) {
+  //   check += checkSection(board,number,6,9,6,9);
+  // } else {
+  //   console.log("ERROR: Reached Elsed in Section IsSafe")
+  // }
+
+  check += checkSection(board, number, numberRow, numberCol);
+
+  // console.log("Row Number: " + numberRow + " Check Number: " + check + " Number RC:" +numberRow+ "" +numberCol);
   if (check > 0) {
     return false;
   } else {
@@ -120,12 +109,16 @@ var checkColumn = function checkColumn(board, number, numberCol) {
       output += 1;
     } else {}
   }
-  console.log("Column: " + numberCol + " Number: " + number + " Output: " + output);
+  // console.log("Column: " +numberCol+ " Number: " + number + " Output: " + output);
   return output;
 };
-var checkSection = function checkSection(board, number, sRowMin, sRowMax, sColMin, sColMax) {
-  for (var rowI = 0; rowI < board.length; rowI++) {
-    for (var colI = 0; colI < board[rowI].length; colI++) {
+var checkSection = function checkSection(board, number, numberRow, numberCol) {
+  var sRowMin = numberRow - 1 - (numberRow - 1) % 3;
+  var sColMin = numberCol - 1 - (numberCol - 1) % 3;
+  var sRowMax = sRowMin + 3;
+  var sColMax = sColMin + 3;
+  for (var rowI = sRowMin; rowI < board.length; rowI++) {
+    for (var colI = sColMin; colI < board[rowI].length; colI++) {
       if (sRowMin <= rowI && rowI < sRowMax && sColMin <= colI && colI < sColMax) {
         if (number == board[rowI][colI]) {
           return 1;
@@ -141,12 +134,9 @@ var getRandomNumbers = function getRandomNumbers() {
   var currentIndex = array.length,
       temporaryValue,
       randomIndex;
-  // While there remain elements to shuffle...
   while (0 !== currentIndex) {
-    // Pick a remaining element...
     randomIndex = Math.floor(Math.random() * currentIndex);
     currentIndex -= 1;
-    // And swap it with the current element.
     temporaryValue = array[currentIndex];
     array[currentIndex] = array[randomIndex];
     array[randomIndex] = temporaryValue;
