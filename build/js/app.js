@@ -39,17 +39,29 @@ var Board = exports.Board = function () {
       for (var row = 1; row <= 9; row++) {
         var rowNumbers = getRandomNumbers();
         board.push([]);
-
         for (var col = 1; col <= 9; col++) {
           var valueNotAdded = 0;
+          board[row - 1].push(0);
           for (var index = 0; index < rowNumbers.length; index++) {
             if (isSafe(board, rowNumbers[index], row, col)) {
               $("#" + row + "" + col).html('<p>' + rowNumbers[index] + '</p>');
-              board[row - 1].push(rowNumbers.splice(index, 1));
+              board[row - 1][col - 1] = parseInt(rowNumbers.splice(index, 1));
               index += 9;
             }
           }
+          // console.log("row "+ row +": " + rowNumbers);
+          // else if(index >= rowNumbers.length) {
+          //   console.log("Number cannot be added: " + rowNumbers[index]);
+          // }
+          // if (board[row-1].length < (col)) {
+          //   $("#" + row + "" + col-1).html(`<p class="error">${rowNumbers[0]}</p>`);
+          //   board[row-1].push(rowNumbers.splice(0, 1));
+          // }
         }
+      }
+
+      for (var i = 0; i < board.length; i++) {
+        console.log(board[i]);
       }
     }
   }, {
@@ -63,58 +75,65 @@ var Board = exports.Board = function () {
 }();
 
 var isSafe = function isSafe(board, number, numberRow, numberCol) {
-  var check = true;
-  for (var rows = 0; rows < board.length; rows++) {
-    if (number == board[rows][numberCol - 1]) {
-      check = false;
+  var check = 0;
+  // for(let rows = 1; rows < board.length; rows++){
+  //   if(number == board[rows-1][numberCol-1]) {
+  //     check += 1;
+  //   } else {console.log("row check: "+ rows + "Row Number:");}
+  // }
+
+  check += checkColumn(board, number, numberCol);
+
+  // debugger;
+  if (numberRow - 1 < 3 && numberCol - 1 < 3) {
+    check += checkSection(board, number, 0, 3, 0, 3);
+  } else if (numberRow - 1 < 3 && numberCol - 1 < 6) {
+    check += checkSection(board, number, 0, 3, 3, 6);
+  } else if (numberRow - 1 < 3 && numberCol - 1 < 9) {
+    check += checkSection(board, number, 0, 3, 6, 9);
+  } else if (numberRow - 1 < 6 && numberCol - 1 < 3) {
+    check += checkSection(board, number, 3, 6, 0, 3);
+  } else if (numberRow - 1 < 6 && numberCol - 1 < 6) {
+    check += checkSection(board, number, 3, 6, 3, 6);
+  } else if (numberRow - 1 < 6 && numberCol - 1 < 9) {
+    check += checkSection(board, number, 3, 6, 6, 9);
+  } else if (numberRow - 1 < 9 && numberCol - 1 < 3) {
+    check += checkSection(board, number, 6, 9, 0, 3);
+  } else if (numberRow - 1 < 9 && numberCol - 1 < 6) {
+    check += checkSection(board, number, 6, 9, 3, 6);
+  } else if (numberRow - 1 < 9 && numberCol - 1 < 9) {
+    check += checkSection(board, number, 6, 9, 6, 9);
+  } else {
+    console.log("ERROR: Reached Elsed in Section IsSafe");
+  }
+  console.log("Row Number: " + numberRow + " Check Number: " + check + " Number RC:" + numberRow + "" + numberCol);
+  if (check > 0) {
+    return false;
+  } else {
+    return true;
+  }
+};
+var checkColumn = function checkColumn(board, number, numberCol) {
+  var output = 0;
+  for (var rows = 1; rows < board.length; rows++) {
+    if (number == board[rows - 1][numberCol - 1]) {
+      output += 1;
     } else {}
   }
-  // debugger;
-  // if(numberRow-1 < 3 && numberCol-1 < 3) {
-  //   for(let rowI = 0; rowI < board.length; rowI++) {
-  //     for(let colI = 0; colI < board[rowI].length; colI++) {
-  //       if(colI < 3 && rowI < 3) {
-  //         if(number == board[rowI][colI]) {
-  //           check = false;
-  //         }
-  //       }
-  //     }
-  //   }
-  // } else if(numberRow-1 < 3 && numberCol-1 < 6) {
-  //   for(let rowI = 0; rowI < board.length; rowI++) {
-  //     for(let colI = 0; colI < board[rowI].length; colI++) {
-  //       if(rowI < 3 && 3 <= colI && colI < 6) {
-  //         if(number == board[rowI][colI]) {
-  //           check = false;
-  //         }
-  //       }
-  //     }
-  //   }
-  // } else if(numberRow-1 < 3 && numberCol-1 < 9) {
-  //   for(let rowI = 0; rowI < board.length; rowI++) {
-  //     for(let colI = 0; colI < board[rowI].length; colI++) {
-  //       if(rowI < 3 && 6 <= colI && colI < 9) {
-  //         if(number == board[rowI][colI]) {
-  //           check = false;
-  //         }
-  //       }
-  //     }
-  //   }
-  // } else if(numberRow-1 < 6 && numberCol-1 < 9) {
-  //   for(let rowI = 0; rowI < board.length; rowI++) {
-  //     for(let colI = 0; colI < board[rowI].length; colI++) {
-  //       if(3 <= rowI && rowI < 6 && 0 <= colI && colI < 3) {
-  //         if(number == board[rowI][colI]) {
-  //           check = false;
-  //         }
-  //       }
-  //     }
-  //   }
-  // }
-  if (numberRow - 1 < 3 && numberCol - 1 < 3) {
-    check = checkSection(board, number, 0, 3, 0, 3);
+  console.log("Column: " + numberCol + " Number: " + number + " Output: " + output);
+  return output;
+};
+var checkSection = function checkSection(board, number, sRowMin, sRowMax, sColMin, sColMax) {
+  for (var rowI = 0; rowI < board.length; rowI++) {
+    for (var colI = 0; colI < board[rowI].length; colI++) {
+      if (sRowMin <= rowI && rowI < sRowMax && sColMin <= colI && colI < sColMax) {
+        if (number == board[rowI][colI]) {
+          return 1;
+        } else {}
+      }
+    }
   }
-  return check;
+  return 0;
 };
 
 var getRandomNumbers = function getRandomNumbers() {
@@ -133,18 +152,6 @@ var getRandomNumbers = function getRandomNumbers() {
     array[randomIndex] = temporaryValue;
   }
   return array;
-};
-
-var checkSection = function checkSection(board, number, sRowMin, sRowMax, sColMin, sColMax) {
-  for (var rowI = 0; rowI < board.length; rowI++) {
-    for (var colI = 0; colI < board[rowI].length; colI++) {
-      if (sRowMin <= rowI && rowI < sRowMax && sColMin <= colI && colI < sColMax) {
-        if (number == board[rowI][colI]) {
-          return false;
-        }
-      }
-    }
-  }
 };
 
 },{}],2:[function(require,module,exports){

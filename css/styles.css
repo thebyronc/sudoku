@@ -35,3 +35,7 @@ p {
 	text-align: center;
 	margin-top: 40px;
 }
+
+.error {
+	color: #FF0000;
+}
