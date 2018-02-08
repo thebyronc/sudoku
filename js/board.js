@@ -6,6 +6,8 @@ export class Board {
     const gridValues = ['1','2','3','4','5','6','7','8','9'];
   }
   createGrid(x) {
+    let initialBoard = new Board();
+    initialBoard.testMsg();
     for (let rows = 1; rows <= x; rows++) {
       for (let columns = 1; columns <= x; columns++) {
         if(rows % 3 === 0) {
@@ -39,7 +41,9 @@ export class Board {
         console.log(board[i]);
     }
   }
-
+  testMsg() {
+    $(".errorMsg").text("test");
+  }
   clearGrid(){
     $(".grid").remove();
   }

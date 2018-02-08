@@ -22,6 +22,8 @@ var Board = exports.Board = function () {
   }, {
     key: 'createGrid',
     value: function createGrid(x) {
+      var initialBoard = new Board();
+      initialBoard.testMsg();
       for (var rows = 1; rows <= x; rows++) {
         for (var columns = 1; columns <= x; columns++) {
           if (rows % 3 === 0) {
@@ -55,6 +57,11 @@ var Board = exports.Board = function () {
       for (var i = 0; i < board.length; i++) {
         console.log(board[i]);
       }
+    }
+  }, {
+    key: 'testMsg',
+    value: function testMsg() {
+      $(".errorMsg").text("test");
     }
   }, {
     key: 'clearGrid',
