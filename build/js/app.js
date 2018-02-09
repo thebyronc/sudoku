@@ -27,37 +27,76 @@ var Board = exports.Board = function () {
       for (var rows = 1; rows <= x; rows++) {
         for (var columns = 1; columns <= x; columns++) {
           if (rows % 3 === 0) {
-            $("#container").append('<div class=\'grid botborder\' id="' + rows + columns + '"><p>&nbsp;</p></div>');
+            $("#container").append('<div class=\'grid botborder\' id="' + rows + columns + '"><input></div>');
           } else {
-            $("#container").append('<div class=\'grid\' id="' + rows + columns + '"><p>&nbsp;</p></div>');
+            $("#container").append('<div class=\'grid\' id="' + rows + columns + '"><input></div>');
           }
         }
       }
     }
+
+    // fillGrid(){
+    //   for(let row =0; row < 9; row++ ){
+    //     for(let col = 0; col < 9; col ++){
+    //       if(board[row][col] == 0){
+    //         for(let number = 1; number <= 9; number++){
+    //           if(isSafe(board, number, numberRow, numberCol)){
+    //             board[row][col] = number;
+    //             if(fillGrid()){
+    //               return true;
+    //             }else {
+    //               board[row][col] = 0;
+    //             }
+    //             }
+    //           }
+    //         return false;
+    //         }
+    //       }
+    //     }
+    //   return true;
+    //   }
+
   }, {
     key: 'createGridValues',
-    value: function createGridValues() {
+    value: function (_createGridValues) {
+      function createGridValues() {
+        return _createGridValues.apply(this, arguments);
+      }
+
+      createGridValues.toString = function () {
+        return _createGridValues.toString();
+      };
+
+      return createGridValues;
+    }(function () {
       var board = [];
       for (var row = 1; row <= 9; row++) {
         var rowNumbers = getRandomNumbers();
         board.push([]);
-        for (var col = 1; col <= 9; col++) {
+        for (var _col = 1; _col <= 9; _col++) {
           var valueNotAdded = 0;
           board[row - 1].push(0);
+        }
+        if (board[row][col] == 0) {
           for (var index = 0; index < rowNumbers.length; index++) {
             if (isSafe(board, rowNumbers[index], row, col)) {
               $("#" + row + "" + col).html('<p>' + rowNumbers[index] + '</p>');
               board[row - 1][col - 1] = parseInt(rowNumbers.splice(index, 1));
-              index += 9;
+              if (createGridValues) {
+                return true;
+              } else {
+                board[row][col] == 0;
+              }
             }
           }
+          return false;
         }
       }
-
+      return true;
       for (var i = 0; i < board.length; i++) {
         console.log(board[i]);
       }
-    }
+    })
   }, {
     key: 'testMsg',
     value: function testMsg() {
@@ -72,6 +111,37 @@ var Board = exports.Board = function () {
 
   return Board;
 }();
+
+//   createGridValues() {
+//     let board = [];
+//     for(let row = 1; row <= 9; row++) {
+//       let rowNumbers = getRandomNumbers();
+//       board.push([]);
+//       for(let col = 1; col <= 9; col++) {
+//         let valueNotAdded = 0;
+//         board[row-1].push(0);
+//         for(let index = 0; index < rowNumbers.length; index++) {
+//           if(isSafe(board, rowNumbers[index], row, col)){
+//             $("#" + row + "" + col).html(`<p>${rowNumbers[index]}</p>`);
+//             board[row-1][col-1] = parseInt(rowNumbers.splice(index, 1));
+//             index += 9;
+//           }
+//         }
+//       }
+//     }
+//
+//     for(let i = 0; i < board.length; i++) {
+//         console.log(board[i]);
+//     }
+//   }
+//   testMsg() {
+//     $(".errorMsg").text("test");
+//   }
+//   clearGrid(){
+//     $(".grid").remove();
+//   }
+//
+
 
 var isSafe = function isSafe(board, number, numberRow, numberCol) {
   var check = 0;
@@ -160,12 +230,19 @@ $(document).ready(function () {
   var board = new _board.Board();
   board.createGrid(9);
   board.createGridValues();
+  //board.fillGrid();
   $(".newGrid").click(function () {
+    var board = new _board.Board();
+    board.clearGrid();
+    board.createGrid(9);
+  });
+  $(".newValues").click(function () {
     var board = new _board.Board();
     board.clearGrid();
     board.createGrid(9);
     board.createGridValues();
   });
+
   $(".clearGrid").click(function () {
     var board = new _board.Board();
     board.clearGrid();

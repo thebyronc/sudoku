@@ -35,7 +35,19 @@ p {
 	text-align: center;
 	margin-top: 40px;
 }
-
+input {
+	margin: auto;
+	width: 98px;
+	height: 98px;
+	text-align: center;
+	border: none;
+	margin: 0px;
+	padding: 0px;
+}
 .error {
 	color: #FF0000;
+}
+div {
+	padding: 0px;
+	margin: 0px;
 }
